@@ -64,7 +64,15 @@ N_SOMA:
 
 N_SUB:
     CMP CH,"*"
+    JNZ N_MULT
     CALL MULTIPLICA
+
+N_MULT:
+    CMP CH,"%"
+    JNZ ERRO
+    CALL DIVISAO
+
+ERRO:
 
 FIM:
     MOV AH,4ch
@@ -99,7 +107,7 @@ RESUL PROC
     mov dl,ch
     int 21h
     
-    jmp FIM
+    JMP FIM
 RESUL ENDP
 
 
@@ -118,13 +126,19 @@ SUBTRACAO PROC
 
     SUB BH,BL
     MOV CL,BH
+    JS NEGA
     MOV BL,"+"
+
+    pulalinha
+    
+    JMP RESUL
+NEGA:
+    NEG CL
+    MOV BL,"-"
  
     pulalinha
 
     JMP RESUL
-
-    RET 
 SUBTRACAO ENDP 
 
 MULTIPLICA PROC
@@ -155,20 +169,10 @@ CAR0:
     MOV BL,"+"
     JMP RESUL
 RET                 
-MULTIPLICA   ENDP
+MULTIPLICA ENDP
 
-; DIVISAO:
-;     DIV BL
-;     OR BH,30H
-   
-;     pulalinha
+DIVISAO PROC
 
-;     MOV AH,09h
-;     LEA DX,MSG4
-;     INT 21h
-    
-;     MOV AH,02
-;     MOV DL,BH
-;     INT 21H
-
+RET
+DIVISAO ENDP
 END MAIN
